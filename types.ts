@@ -1,6 +1,14 @@
 
 export type Tab = 'dashboard' | 'items' | 'new-stocks' | 'sales' | 'purchase' | 'report' | 'settings';
 
+export interface User {
+  id: string;
+  username: string;
+  fullName: string;
+  email: string;
+  role: 'admin' | 'manager' | 'viewer';
+}
+
 export interface Item {
   id: string;
   sku: string;

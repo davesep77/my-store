@@ -8,11 +8,17 @@ import { Purchase } from './components/Purchase';
 import { Reports } from './components/Reports';
 import { Settings } from './components/Settings';
 import { NewStocks } from './components/NewStocks';
-import { Tab, Item, Transaction, UserSettings } from './types';
+import { Auth } from './components/Auth';
+import { Tab, Item, Transaction, UserSettings, User } from './types';
 import { INITIAL_ITEMS, INITIAL_TRANSACTIONS, INITIAL_SETTINGS } from './constants';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('inventory_session');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [items, setItems] = useState<Item[]>(() => {
     const saved = localStorage.getItem('inventory_items');
     return saved ? JSON.parse(saved) : INITIAL_ITEMS;
@@ -27,10 +33,15 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
+    if (user) {
+      localStorage.setItem('inventory_session', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('inventory_session');
+    }
     localStorage.setItem('inventory_items', JSON.stringify(items));
     localStorage.setItem('inventory_transactions', JSON.stringify(transactions));
     localStorage.setItem('inventory_settings', JSON.stringify(settings));
-  }, [items, transactions, settings]);
+  }, [user, items, transactions, settings]);
 
   const addItem = (newItem: Omit<Item, 'id'>) => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -77,6 +88,15 @@ const App: React.FC = () => {
     setTransactions(prev => prev.filter(t => t.id !== id));
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    setActiveTab('dashboard');
+  };
+
+  if (!user) {
+    return <Auth onLogin={setUser} />;
+  }
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -99,7 +119,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <Layout activeTab={activeTab} setActiveTab={setActiveTab} user={user} onLogout={handleLogout}>
       {renderContent()}
     </Layout>
   );

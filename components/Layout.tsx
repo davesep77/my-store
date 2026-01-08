@@ -10,19 +10,22 @@ import {
   Settings as SettingsIcon,
   ChevronLeft,
   ChevronRight,
-  User,
+  User as UserIcon,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
-import { Tab } from '../types';
+import { Tab, User } from '../types';
 
 interface LayoutProps {
   children: React.ReactNode;
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
+  user: User;
+  onLogout: () => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, user, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -95,17 +98,29 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
           }`}
         >
           <SettingsIcon size={20} />
-          {(!collapsed || mobileMenuOpen) && <span className="ml-3">Settings</span>}
+          {(!collapsed || mobileMenuOpen) && <span className="ml-3 font-bold">Settings</span>}
         </button>
-        <div className="flex items-center p-3 bg-black/5 rounded-2xl">
-          <div className="w-8 h-8 rounded-full bg-[#A87FF3] flex items-center justify-center border-2 border-white/20">
-            <User size={16} />
+        
+        <div className="flex flex-col gap-2 p-3 bg-black/10 rounded-3xl border border-white/5">
+          <div className="flex items-center">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border-2 border-white/10 shadow-lg">
+              <UserIcon size={18} />
+            </div>
+            {(!collapsed || mobileMenuOpen) && (
+              <div className="ml-3 overflow-hidden">
+                  <p className="text-sm font-black truncate">{user.fullName}</p>
+                  <p className="text-[10px] opacity-60 truncate uppercase tracking-widest">{user.role}</p>
+              </div>
+            )}
           </div>
           {(!collapsed || mobileMenuOpen) && (
-            <div className="ml-3 overflow-hidden">
-                <p className="text-sm font-bold truncate">Admin User</p>
-                <p className="text-[10px] opacity-60 truncate">Manager Account</p>
-            </div>
+            <button 
+              onClick={onLogout}
+              className="mt-2 w-full flex items-center justify-center gap-2 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-100 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
+            >
+              <LogOut size={14} />
+              Logout Session
+            </button>
           )}
         </div>
       </div>
