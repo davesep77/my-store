@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':price' => $item['price'],
                 ':id' => $item['id']
             ]);
-            $updatedCount++;
+            $updatedCount += $stmt->rowCount();
         }
 
         $pdo->commit();

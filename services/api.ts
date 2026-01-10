@@ -1,6 +1,6 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
-import { Item, Transaction, UserSettings, Department, Customer, Vendor, Employee, TimeEntry, Kit, BackOrder, Style, PricingRule, CustomerPrice, Settlement } from './types';
+import { Item, Transaction, UserSettings, Department, Customer, Vendor, Employee, TimeEntry, Kit, BackOrder, Style, PricingRule, CustomerPrice, Settlement } from '../types';
 
 export const api = {
     async getItems(): Promise<Item[]> {
