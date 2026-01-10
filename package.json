@@ -9,16 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-to-print": "^3.2.0",
-=======
-    "react-dom": "^19.2.3",
-    "lucide-react": "^0.562.0",
-    "react": "^19.2.3",
->>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     "recharts": "^3.6.0",
     "xlsx": "^0.18.5"
   },
