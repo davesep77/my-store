@@ -2,7 +2,10 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Edit2, Trash2, FileSpreadsheet, FileText as FilePdf, X, ChevronDown, Filter } from 'lucide-react';
 import { Item, Transaction, UserSettings } from '../types';
+<<<<<<< HEAD
 import { ItemModal } from './ItemModal';
+=======
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
 
 interface InventoryProps {
   items: Item[];
@@ -15,6 +18,7 @@ interface InventoryProps {
 export const Inventory: React.FC<InventoryProps> = ({ items, transactions, settings, onUpdate, onDelete }) => {
   const [search, setSearch] = useState('');
   const [filterMode, setFilterMode] = useState<'all' | 'low-stock'>('all');
+<<<<<<< HEAD
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
@@ -34,6 +38,12 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
   const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.sku.toLowerCase().includes(search.toLowerCase());
+=======
+
+  const filteredItems = items.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || 
+                          item.sku.toLowerCase().includes(search.toLowerCase());
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     const matchesFilter = filterMode === 'all' || item.stock <= (item.stockAlertLevel || 5);
     return matchesSearch && matchesFilter;
   });
@@ -56,6 +66,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
 
     items.forEach(item => {
       const itemTransactions = transactions.filter(t => t.itemId === item.id);
+<<<<<<< HEAD
 
       const openingStock = itemTransactions
         .filter(t => t.type === 'opening')
@@ -65,6 +76,17 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
         .filter(t => t.type === 'purchase')
         .reduce((sum, t) => sum + t.quantity, 0);
 
+=======
+      
+      const openingStock = itemTransactions
+        .filter(t => t.type === 'opening')
+        .reduce((sum, t) => sum + t.quantity, 0);
+        
+      const totalPurchase = itemTransactions
+        .filter(t => t.type === 'purchase')
+        .reduce((sum, t) => sum + t.quantity, 0);
+        
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
       const totalSales = itemTransactions
         .filter(t => t.type === 'sale')
         .reduce((sum, t) => sum + t.quantity, 0);
@@ -96,11 +118,19 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
           <h2 className="text-2xl font-bold text-gray-800">All Items</h2>
           <p className="text-xs text-gray-400">Total {items.length} unique products in inventory</p>
         </div>
+<<<<<<< HEAD
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <div className="relative flex-1 min-w-[200px] md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
+=======
+        
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 min-w-[200px] md:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
               type="text"
               placeholder="Type to Search..."
               value={search}
@@ -108,9 +138,15 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
               className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-transparent border focus:border-[#8E54E9] rounded-xl text-sm focus:ring-0 focus:bg-white transition-all outline-none"
             />
           </div>
+<<<<<<< HEAD
 
           <div className="flex items-center gap-2">
             <button
+=======
+          
+          <div className="flex items-center gap-2">
+            <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
               onClick={() => setSearch('')}
               className="flex items-center gap-2 px-4 py-2.5 bg-yellow-50 text-yellow-700 rounded-xl hover:bg-yellow-100 text-xs font-bold transition-all hover:scale-105"
             >
@@ -170,14 +206,22 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
                   <td className="px-6 py-4 text-gray-500 font-medium">{fmt(m?.consumptionValue || 0)}</td>
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-2">
+<<<<<<< HEAD
                       <button
+=======
+                      <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                         onClick={() => onDelete(item.id)}
                         className="w-8 h-8 flex items-center justify-center bg-[#FF4D4D] text-white rounded-lg hover:bg-red-600 transition-all hover:scale-110 shadow-sm"
                       >
                         <Trash2 size={16} />
                       </button>
+<<<<<<< HEAD
                       <button
                         onClick={() => handleEdit(item)}
+=======
+                      <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                         className="w-8 h-8 flex items-center justify-center bg-[#4ADE80] text-white rounded-lg hover:bg-green-500 transition-all hover:scale-110 shadow-sm"
                       >
                         <Edit2 size={16} />
@@ -190,12 +234,17 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
           </tbody>
         </table>
       </div>
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f9fafb; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
       `}</style>
+<<<<<<< HEAD
       <ItemModal
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setEditingItem(null); }}
@@ -203,6 +252,8 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
         initialData={editingItem}
         title="Edit Item Details"
       />
+=======
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     </div>
   );
 };

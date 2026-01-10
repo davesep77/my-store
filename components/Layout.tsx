@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import {
   LayoutDashboard,
   Package,
@@ -7,14 +8,27 @@ import {
   TrendingUp,
   ShoppingCart,
   FileText,
+=======
+import { 
+  LayoutDashboard, 
+  Package, 
+  PlusCircle, 
+  TrendingUp, 
+  ShoppingCart, 
+  FileText, 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
   Settings as SettingsIcon,
   ChevronLeft,
   ChevronRight,
   User as UserIcon,
   Menu,
   X,
+<<<<<<< HEAD
   LogOut,
   LayoutGrid
+=======
+  LogOut
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
 } from 'lucide-react';
 import { Tab, User } from '../types';
 
@@ -37,7 +51,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
+<<<<<<< HEAD
     { id: 'management', label: 'Management', icon: <LayoutGrid size={20} /> },
+=======
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     { id: 'items', label: 'All Items', icon: <Package size={20} /> },
     { id: 'new-stocks', label: 'New Stocks In', icon: <PlusCircle size={20} /> },
     { id: 'sales', label: 'Sales', icon: <TrendingUp size={20} /> },
@@ -56,13 +73,21 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
             <h1 className="text-xl font-black whitespace-nowrap tracking-tight">My Store</h1>
           </div>
         )}
+<<<<<<< HEAD
         <button
+=======
+        <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
           onClick={() => setCollapsed(!collapsed)}
           className="hidden md:flex p-1.5 hover:bg-white/10 rounded-lg transition-all active:scale-90"
         >
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
+<<<<<<< HEAD
         <button
+=======
+        <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
           onClick={() => setMobileMenuOpen(false)}
           className="md:hidden p-1.5 hover:bg-white/10 rounded-lg transition-colors"
         >
@@ -75,17 +100,29 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id as Tab)}
+<<<<<<< HEAD
             className={`w-full flex items-center p-3 rounded-2xl transition-all duration-200 group relative ${activeTab === item.id
                 ? 'bg-white/20 font-bold shadow-lg shadow-black/10'
                 : 'hover:bg-white/10 opacity-70 hover:opacity-100'
               }`}
+=======
+            className={`w-full flex items-center p-3 rounded-2xl transition-all duration-200 group relative ${
+              activeTab === item.id 
+              ? 'bg-white/20 font-bold shadow-lg shadow-black/10' 
+              : 'hover:bg-white/10 opacity-70 hover:opacity-100'
+            }`}
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
           >
             <span className={`min-w-[24px] transition-transform duration-200 ${activeTab === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>
               {item.icon}
             </span>
             {(!collapsed || mobileMenuOpen) && <span className="ml-3 truncate animate-in slide-in-from-left-2">{item.label}</span>}
             {activeTab === item.id && (
+<<<<<<< HEAD
               <div className="absolute left-0 w-1 h-6 bg-white rounded-r-full shadow-glow" />
+=======
+                <div className="absolute left-0 w-1 h-6 bg-white rounded-r-full shadow-glow" />
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
             )}
           </button>
         ))}
@@ -94,13 +131,23 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
       <div className="p-4 border-t border-white/10 space-y-2">
         <button
           onClick={() => setActiveTab('settings')}
+<<<<<<< HEAD
           className={`w-full flex items-center p-3 rounded-2xl transition-all ${activeTab === 'settings' ? 'bg-white/20' : 'hover:bg-white/10 opacity-70 hover:opacity-100'
             }`}
+=======
+          className={`w-full flex items-center p-3 rounded-2xl transition-all ${
+            activeTab === 'settings' ? 'bg-white/20' : 'hover:bg-white/10 opacity-70 hover:opacity-100'
+          }`}
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
         >
           <SettingsIcon size={20} />
           {(!collapsed || mobileMenuOpen) && <span className="ml-3 font-bold">Settings</span>}
         </button>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
         <div className="flex flex-col gap-2 p-3 bg-black/10 rounded-3xl border border-white/5">
           <div className="flex items-center">
             <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border-2 border-white/10 shadow-lg">
@@ -108,13 +155,22 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
             </div>
             {(!collapsed || mobileMenuOpen) && (
               <div className="ml-3 overflow-hidden">
+<<<<<<< HEAD
                 <p className="text-sm font-black truncate">{user.fullName}</p>
                 <p className="text-[10px] opacity-60 truncate uppercase tracking-widest">{user.role}</p>
+=======
+                  <p className="text-sm font-black truncate">{user.fullName}</p>
+                  <p className="text-[10px] opacity-60 truncate uppercase tracking-widest">{user.role}</p>
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
               </div>
             )}
           </div>
           {(!collapsed || mobileMenuOpen) && (
+<<<<<<< HEAD
             <button
+=======
+            <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
               onClick={onLogout}
               className="mt-2 w-full flex items-center justify-center gap-2 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-100 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
             >
@@ -131,7 +187,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
     <div className="flex min-h-screen bg-[#FDFDFF] relative">
       {/* Mobile Backdrop */}
       {mobileMenuOpen && (
+<<<<<<< HEAD
         <div
+=======
+        <div 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
           className="fixed inset-0 bg-black/60 z-[45] md:hidden backdrop-blur-md transition-all duration-300"
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -156,7 +216,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
             </div>
             <h1 className="text-xl font-black text-gray-800 tracking-tight">My Store</h1>
           </div>
+<<<<<<< HEAD
           <button
+=======
+          <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
             onClick={() => setMobileMenuOpen(true)}
             className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-xl transition-all active:scale-90"
           >

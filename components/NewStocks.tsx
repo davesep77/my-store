@@ -1,8 +1,13 @@
 
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { Plus, Edit2, Trash2, ChevronRight, Search, AlertTriangle } from 'lucide-react';
 import { Item, UserSettings } from '../types';
 import { ItemModal } from './ItemModal';
+=======
+import { Plus, Edit2, Trash2, ChevronRight, X, AlertTriangle, Search } from 'lucide-react';
+import { Item, UserSettings } from '../types';
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
 
 interface NewStocksProps {
   items: Item[];
@@ -18,26 +23,78 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
+<<<<<<< HEAD
   const handleOpenAdd = () => {
     setEditingItem(null);
+=======
+  const [formData, setFormData] = useState({
+    sku: '',
+    name: '',
+    stock: '',
+    unitCost: '',
+    sellingPrice: '',
+    stockAlertLevel: '5',
+    remarks: ''
+  });
+
+  const handleOpenAdd = () => {
+    setEditingItem(null);
+    setFormData({ sku: '', name: '', stock: '', unitCost: '', sellingPrice: '', stockAlertLevel: '5', remarks: '' });
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (item: Item) => {
     setEditingItem(item);
+<<<<<<< HEAD
     setIsModalOpen(true);
   };
 
   const handleSubmit = (data: any) => {
+=======
+    setFormData({
+      sku: item.sku,
+      name: item.name,
+      stock: item.stock.toString(),
+      unitCost: item.unitCost.toString(),
+      sellingPrice: item.sellingPrice.toString(),
+      stockAlertLevel: (item.stockAlertLevel || 5).toString(),
+      remarks: item.remarks || ''
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      sku: formData.sku || `SKU-${Math.floor(Math.random() * 1000)}`,
+      name: formData.name,
+      stock: Number(formData.stock),
+      unitCost: Number(formData.unitCost),
+      sellingPrice: Number(formData.sellingPrice),
+      stockAlertLevel: Number(formData.stockAlertLevel),
+      remarks: formData.remarks,
+      dateAdded: editingItem ? editingItem.dateAdded : new Date().toISOString().split('T')[0]
+    };
+
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     if (editingItem) {
       onUpdate({ ...data, id: editingItem.id });
     } else {
       onAdd(data);
     }
+<<<<<<< HEAD
   };
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase()) ||
+=======
+    setIsModalOpen(false);
+  };
+
+  const filteredItems = items.filter(item => 
+    item.name.toLowerCase().includes(search.toLowerCase()) || 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     item.sku.toLowerCase().includes(search.toLowerCase())
   ).slice().reverse();
 
@@ -56,7 +113,11 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
           <h2 className="text-3xl font-black text-gray-800 tracking-tight">Stocks In</h2>
           <p className="text-gray-500 font-medium">Manage your incoming inventory and alerts.</p>
         </div>
+<<<<<<< HEAD
         <button
+=======
+        <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
           onClick={handleOpenAdd}
           className="bg-[#8E54E9] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#7c47d3] transition-all hover:scale-105 active:scale-95 shadow-xl shadow-purple-200"
         >
@@ -68,6 +129,7 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
       {/* Main Table Container */}
       <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden min-h-[500px]">
         <div className="p-6 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between gap-4">
+<<<<<<< HEAD
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
@@ -81,6 +143,21 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
           <div className="text-sm font-bold text-gray-400">
             {filteredItems.length} Total Logs
           </div>
+=======
+             <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input 
+                    type="text"
+                    placeholder="Search entry log..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-white border-transparent border focus:border-purple-300 rounded-2xl text-sm focus:ring-4 focus:ring-purple-50 transition-all outline-none shadow-sm"
+                />
+            </div>
+            <div className="text-sm font-bold text-gray-400">
+                {filteredItems.length} Total Logs
+            </div>
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
         </div>
 
         <div className="overflow-x-auto">
@@ -122,14 +199,22 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
                   <td className="px-6 py-5 text-gray-500 italic max-w-[200px] truncate">{item.remarks || <span className="opacity-30">N/A</span>}</td>
                   <td className="px-8 py-5">
                     <div className="flex justify-center items-center gap-3">
+<<<<<<< HEAD
                       <button
+=======
+                      <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                         onClick={() => setDeleteId(item.id)}
                         className="w-10 h-10 flex items-center justify-center bg-[#FF4D4D] text-white rounded-xl hover:bg-red-600 transition-all hover:scale-110 active:scale-90 shadow-lg shadow-red-200 group/btn"
                         title="Delete Entry"
                       >
                         <Trash2 size={18} className="transition-transform group-hover/btn:rotate-12" />
                       </button>
+<<<<<<< HEAD
                       <button
+=======
+                      <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                         onClick={() => handleOpenEdit(item)}
                         className="w-10 h-10 flex items-center justify-center bg-[#4ADE80] text-white rounded-xl hover:bg-green-500 transition-all hover:scale-110 active:scale-90 shadow-lg shadow-green-200 group/btn"
                         title="Edit Entry"
@@ -141,6 +226,7 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
                 </tr>
               ))}
               {filteredItems.length === 0 && (
+<<<<<<< HEAD
                 <tr>
                   <td colSpan={10} className="py-20 text-center">
                     <div className="flex flex-col items-center opacity-20">
@@ -149,6 +235,16 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
                     </div>
                   </td>
                 </tr>
+=======
+                  <tr>
+                      <td colSpan={10} className="py-20 text-center">
+                          <div className="flex flex-col items-center opacity-20">
+                              <Search size={48} />
+                              <p className="mt-4 font-bold text-xl">No entries found</p>
+                          </div>
+                      </td>
+                  </tr>
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
               )}
             </tbody>
           </table>
@@ -168,13 +264,21 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
                 Deleting this record will affect your current stock totals and cannot be undone. Do you want to continue?
               </p>
               <div className="flex gap-4 w-full">
+<<<<<<< HEAD
                 <button
+=======
+                <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                   onClick={() => setDeleteId(null)}
                   className="flex-1 px-6 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95"
                 >
                   No, Cancel
                 </button>
+<<<<<<< HEAD
                 <button
+=======
+                <button 
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
                   onClick={() => {
                     onDelete(deleteId);
                     setDeleteId(null);
@@ -189,12 +293,130 @@ export const NewStocks: React.FC<NewStocksProps> = ({ items, onAdd, onUpdate, on
         </div>
       )}
 
+<<<<<<< HEAD
       <ItemModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
         initialData={editingItem}
       />
+=======
+      {/* Add/Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+            <div className="p-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-xl text-white ${editingItem ? 'bg-green-500' : 'bg-purple-500'}`}>
+                    {editingItem ? <Edit2 size={24} /> : <Plus size={24} />}
+                </div>
+                <h3 className="text-2xl font-black text-gray-800 tracking-tight">
+                    {editingItem ? 'Edit Product Entry' : 'Add New Inventory'}
+                </h3>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="p-2.5 text-gray-400 hover:text-gray-600 rounded-2xl hover:bg-gray-100 transition-all active:scale-90">
+                <X size={28} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Product Name</label>
+                  <input 
+                    required
+                    type="text" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all text-gray-800 font-bold placeholder:font-normal placeholder:opacity-40" 
+                    placeholder="e.g. SSD 1TB NVMe Samsung"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">SKU / Model Code</label>
+                  <input 
+                    type="text" 
+                    value={formData.sku}
+                    onChange={(e) => setFormData({...formData, sku: e.target.value})}
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all font-mono" 
+                    placeholder="Leave empty for auto"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Alert Level (Low Stock)</label>
+                  <input 
+                    type="number" 
+                    value={formData.stockAlertLevel}
+                    onChange={(e) => setFormData({...formData, stockAlertLevel: e.target.value})}
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all font-bold" 
+                  />
+                </div>
+
+                <div className="md:col-span-2 grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Quantity</label>
+                    <input 
+                      required
+                      type="number" 
+                      value={formData.stock}
+                      onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                      className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all font-bold" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Unit Cost</label>
+                    <input 
+                      required
+                      type="number" 
+                      value={formData.unitCost}
+                      onChange={(e) => setFormData({...formData, unitCost: e.target.value})}
+                      className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all font-bold" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Selling Price</label>
+                    <input 
+                      required
+                      type="number" 
+                      value={formData.sellingPrice}
+                      onChange={(e) => setFormData({...formData, sellingPrice: e.target.value})}
+                      className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all font-bold" 
+                    />
+                  </div>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Remarks & Descriptions</label>
+                  <textarea 
+                    value={formData.remarks}
+                    onChange={(e) => setFormData({...formData, remarks: e.target.value})}
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-500 focus:bg-white outline-none transition-all h-28 resize-none font-medium text-gray-600" 
+                    placeholder="Enter features, warranty info, or batch details..."
+                  />
+                </div>
+              </div>
+              
+              <div className="pt-6 flex gap-4">
+                <button 
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 px-8 py-4.5 bg-gray-100 text-gray-600 rounded-[1.5rem] font-bold hover:bg-gray-200 transition-all active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-[2] bg-[#8E54E9] text-white py-4.5 rounded-[1.5rem] font-bold hover:bg-[#7c47d3] transition-all shadow-2xl shadow-purple-200 active:scale-95"
+                >
+                  {editingItem ? 'Save Updated Changes' : 'Confirm & Add to Stock'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+>>>>>>> a254259620f923355458ce63cc6f910198ac07aa
     </div>
   );
 };
