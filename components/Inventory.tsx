@@ -97,11 +97,11 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
   }, [items, transactions]);
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden animate-slide-up">
+      <div className="p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-white to-purple-50/20">
         <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-bold text-gray-800">All Items</h2>
-          <p className="text-xs text-gray-400">Total {items.length} unique products in inventory</p>
+          <h2 className="text-3xl font-black text-gray-800 font-display">All Items</h2>
+          <p className="text-xs text-gray-500 font-semibold">Total {items.length} unique products in inventory</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
@@ -119,16 +119,16 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSearch('')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-yellow-50 text-yellow-700 rounded-xl hover:bg-yellow-100 text-xs font-bold transition-all hover:scale-105"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 text-yellow-700 rounded-xl hover:shadow-lg text-xs font-bold transition-all hover:scale-105 active:scale-95 border border-yellow-200"
             >
               <X size={14} />
               CLEAR
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-[#8E54E9] text-white rounded-xl hover:bg-[#7c47d3] text-xs font-bold transition-all hover:scale-105 shadow-md shadow-purple-50">
+            <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#8E54E9] to-[#7B47D4] text-white rounded-xl hover:shadow-xl hover:shadow-purple-300/50 text-xs font-bold transition-all hover:scale-105 active:scale-95">
               <FilePdf size={14} />
               PDF
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-purple-50 text-[#8E54E9] rounded-xl hover:bg-purple-100 text-xs font-bold transition-all hover:scale-105">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-50 to-blue-50 text-[#8E54E9] rounded-xl hover:shadow-lg text-xs font-bold transition-all hover:scale-105 active:scale-95 border border-purple-100">
               EXCEL
             </button>
           </div>

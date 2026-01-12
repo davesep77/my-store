@@ -125,10 +125,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-700">
-      
+    <div className="space-y-6 animate-slide-up">
+
       {/* 1. Metric Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <MetricCard 
           title="Total Sale" 
           value={fmt(metrics.totalSales)} 
@@ -162,7 +162,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
       {/* 2. Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Total Sales Line Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-800">Total Sales</h3>
@@ -197,7 +197,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
         </div>
 
         {/* Sales & Purchases Bar Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-800">Sales & Purchases</h3>
@@ -228,7 +228,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
         </div>
 
         {/* Top Sold Products Pie Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="flex justify-between items-start mb-2">
             <div>
               <h3 className="text-sm font-bold text-gray-800">Top Sold Products</h3>
@@ -284,7 +284,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
       {/* 3. Charts Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Earnings Analysis Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-800">Earnings Analysis</h3>
@@ -322,7 +322,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
         </div>
 
         {/* Inventory Turnover Rate Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-800">Inventory Turnover Rate</h3>
@@ -358,7 +358,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ items, transactions, setti
         </div>
 
         {/* Stock Alert Table */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full overflow-hidden transition-all hover:shadow-md">
+        <div className="bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col h-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-200/30 hover:-translate-y-1">
           <div className="mb-4">
             <h3 className="text-sm font-bold text-gray-800">Stock Alert</h3>
             <p className="text-xl font-black text-gray-900">{items.filter(i => i.stock <= (i.stockAlertLevel || 5)).length} Products</p>
@@ -423,18 +423,19 @@ const MetricCard: React.FC<{
   icon: React.ReactNode;
   color: string;
 }> = ({ title, value, subValue, icon, color }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-lg transition-all border-b-4 border-b-transparent hover:border-b-[#8E54E9]">
-    <div className="flex justify-between items-start mb-4">
+  <div className="group bg-white p-6 rounded-[1.5rem] shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col justify-between hover:shadow-2xl hover:shadow-purple-200/40 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div className="flex justify-between items-start mb-4 relative z-10">
         <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{title}</span>
-            <span className={`text-2xl font-black tracking-tight ${color}`}>{value}</span>
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">{title}</span>
+            <span className={`text-3xl font-black tracking-tight ${color} font-display`}>{value}</span>
         </div>
-        <div className="p-2.5 bg-gray-50 rounded-xl group-hover:bg-white transition-colors">
+        <div className="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-sm group-hover:shadow-md group-hover:scale-110 transition-all duration-300">
             {icon}
         </div>
     </div>
-    <span className="text-[10px] text-gray-400 font-bold">
-        <span className="text-green-500 mr-1">●</span> {subValue}
+    <span className="text-[10px] text-gray-500 font-bold relative z-10">
+        <span className="text-green-500 mr-1 text-sm">●</span> {subValue}
     </span>
   </div>
 );

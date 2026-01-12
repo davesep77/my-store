@@ -87,43 +87,48 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
   const t = translations[lang] || translations.en;
 
   return (
-    <div className="min-h-screen bg-[#FDFDFF] flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/20 flex items-center justify-center p-6 relative overflow-hidden">
       {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-100/50 rounded-full blur-[120px]" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-orange-50/50 rounded-full blur-[120px]" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-purple-200/40 to-pink-200/20 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-blue-200/30 to-cyan-200/20 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-gradient-radial from-white/60 to-transparent rounded-full blur-[100px]" />
 
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[3rem] shadow-2xl shadow-purple-100/50 border border-gray-100 overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-700">
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 bg-white/95 backdrop-blur-xl rounded-[3rem] shadow-2xl shadow-purple-200/50 border border-white/60 overflow-hidden relative z-10 animate-scale-in">
 
         {/* Left Side: Illustration / Brand */}
-        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-[#8E54E9] to-[#4776E6] p-16 text-white relative">
-          <div className="flex items-center gap-3">
-            <div className="bg-white/20 backdrop-blur-md p-2 rounded-2xl">
+        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-[#8E54E9] via-[#7B47D4] to-[#4776E6] p-16 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIuNSIgb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
+          <div className="absolute top-10 right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+          <div className="absolute bottom-20 left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
+
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="bg-white/20 backdrop-blur-md p-2.5 rounded-2xl shadow-lg shadow-black/20 border border-white/20">
               <Package size={28} />
             </div>
-            <h1 className="text-2xl font-black tracking-tight">{t.title}</h1>
+            <h1 className="text-2xl font-black tracking-tight font-display">{t.title}</h1>
           </div>
 
-          <div className="space-y-8">
-            <h2 className="text-5xl font-black leading-tight tracking-tighter">
+          <div className="space-y-8 relative z-10">
+            <h2 className="text-5xl font-black leading-[1.1] tracking-tight font-display">
               The World's Most <br /> Powerful Stock <br /> Ecosystem.
             </h2>
-            <p className="text-lg opacity-80 font-medium leading-relaxed max-w-md">
+            <p className="text-lg opacity-90 font-medium leading-relaxed max-w-md">
               Synchronize your multi-currency inventory with real-time MySQL analytics and international locale support.
             </p>
 
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+            <div className="flex gap-3">
+              <div className="flex items-center gap-2 bg-white/15 px-4 py-2.5 rounded-xl backdrop-blur-md border border-white/20 shadow-lg hover:bg-white/20 transition-all">
                 <CheckCircle2 size={16} />
                 <span className="text-xs font-bold">SQL Persisted</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+              <div className="flex items-center gap-2 bg-white/15 px-4 py-2.5 rounded-xl backdrop-blur-md border border-white/20 shadow-lg hover:bg-white/20 transition-all">
                 <Globe size={16} />
                 <span className="text-xs font-bold">Multi-Locale</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between opacity-50 text-[10px] font-bold uppercase tracking-widest">
+          <div className="flex items-center justify-between opacity-60 text-[10px] font-bold uppercase tracking-widest relative z-10">
             <span>© 2025 My Store Global</span>
             <span>Version 4.2.0</span>
           </div>
@@ -297,14 +302,15 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 
             <button
               disabled={isLoading}
-              className="w-full bg-[#8E54E9] text-white py-5 rounded-[1.5rem] font-black text-lg shadow-2xl shadow-purple-200 hover:bg-[#7c47d3] transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-3 mt-4"
+              className="w-full bg-gradient-to-r from-[#8E54E9] to-[#7B47D4] text-white py-5 rounded-[1.5rem] font-black text-lg shadow-2xl shadow-purple-300/60 hover:shadow-purple-400/70 hover:from-[#7c47d3] hover:to-[#6a3bc2] transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-3 mt-4 relative overflow-hidden group"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
               {isLoading ? (
                 <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  {isLogin ? t.login : t.signup}
-                  <ArrowRight size={20} />
+                  <span className="relative z-10">{isLogin ? t.login : t.signup}</span>
+                  <ArrowRight size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
             </button>

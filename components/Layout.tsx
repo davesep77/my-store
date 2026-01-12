@@ -48,13 +48,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
-      <div className="p-6 flex items-center justify-between overflow-hidden">
+      <div className="p-6 flex items-center justify-between overflow-hidden border-b border-white/10">
         {(!collapsed || mobileMenuOpen) && (
           <div className="flex items-center gap-2 animate-in fade-in duration-300">
-            <div className="bg-white p-1.5 rounded-xl shadow-inner">
-              <Package className="text-[#8E54E9]" size={20} />
+            <div className="bg-white/15 backdrop-blur-sm p-1.5 rounded-xl shadow-lg border border-white/20">
+              <Package className="text-white" size={20} />
             </div>
-            <h1 className="text-xl font-black whitespace-nowrap tracking-tight">My Store</h1>
+            <h1 className="text-xl font-black whitespace-nowrap tracking-tight font-display">My Store</h1>
           </div>
         )}
         <button
@@ -71,22 +71,22 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
         </button>
       </div>
 
-      <nav className="flex-1 mt-4 px-3 space-y-2 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 mt-4 px-3 space-y-1.5 overflow-y-auto custom-scrollbar">
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id as Tab)}
-            className={`w-full flex items-center p-3 rounded-2xl transition-all duration-200 group relative ${activeTab === item.id
-              ? 'bg-white/20 font-bold shadow-lg shadow-black/10'
-              : 'hover:bg-white/10 opacity-70 hover:opacity-100'
+            className={`w-full flex items-center p-3.5 rounded-2xl transition-all duration-300 group relative ${activeTab === item.id
+              ? 'bg-white/20 font-bold shadow-xl shadow-black/15 backdrop-blur-sm border border-white/20'
+              : 'hover:bg-white/10 opacity-70 hover:opacity-100 hover:border hover:border-white/10'
               }`}
           >
-            <span className={`min-w-[24px] transition-transform duration-200 ${activeTab === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>
+            <span className={`min-w-[24px] transition-transform duration-300 ${activeTab === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>
               {item.icon}
             </span>
-            {(!collapsed || mobileMenuOpen) && <span className="ml-3 truncate animate-in slide-in-from-left-2">{item.label}</span>}
+            {(!collapsed || mobileMenuOpen) && <span className="ml-3 truncate animate-in slide-in-from-left-2 font-semibold">{item.label}</span>}
             {activeTab === item.id && (
-              <div className="absolute left-0 w-1 h-6 bg-white rounded-r-full shadow-glow" />
+              <div className="absolute left-0 w-1 h-8 bg-white rounded-r-full shadow-glow" />
             )}
           </button>
         ))}
@@ -129,7 +129,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
   );
 
   return (
-    <div className="flex min-h-screen bg-[#FDFDFF] relative">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/10 relative">
       {/* Mobile Backdrop */}
       {mobileMenuOpen && (
         <div
@@ -140,7 +140,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
 
       {/* Sidebar - fixed on mobile, sticky on desktop */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 md:sticky md:top-0 h-screen bg-[#8E54E9] text-white flex flex-col shadow-2xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)
+        fixed inset-y-0 left-0 z-50 md:sticky md:top-0 h-screen bg-gradient-to-b from-[#8E54E9] via-[#7B47D4] to-[#6A3BC2] text-white flex flex-col shadow-2xl shadow-purple-900/30 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)
         ${mobileMenuOpen ? 'translate-x-0 w-72' : '-translate-x-full md:translate-x-0'}
         ${collapsed ? 'md:w-24' : 'md:w-72'}
       `}>

@@ -190,8 +190,12 @@ const App: React.FC = () => {
   // Show loading state to prevent flashes
   if (loading && !items.length && !transactions.length) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8E54E9]"></div>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/10">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-100 border-t-[#8E54E9]"></div>
+          <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-purple-200 opacity-20"></div>
+        </div>
+        <p className="mt-6 text-sm font-bold text-gray-500 animate-pulse">Loading your store...</p>
       </div>
     );
   }

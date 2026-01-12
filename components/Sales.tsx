@@ -121,8 +121,9 @@ export const Sales: React.FC<SalesProps> = ({ items, transactions, onAddTransact
 
   if (view === 'add' || view === 'edit') {
     return (
-      <div className="max-w-4xl mx-auto animate-in slide-in-from-bottom-8 duration-500">
-        <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-purple-100 border border-gray-100">
+      <div className="max-w-4xl mx-auto animate-scale-in">
+        <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-purple-200/50 border border-gray-100 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-50 to-transparent rounded-full blur-3xl opacity-50" />
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-4">
               <div className="bg-purple-100 p-3 rounded-2xl">
@@ -236,14 +237,14 @@ export const Sales: React.FC<SalesProps> = ({ items, transactions, onAddTransact
   }
 
   return (
-    <div className="animate-in fade-in duration-700">
+    <div className="animate-slide-up">
       <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden min-h-[500px]">
         {/* Table Header matching screenshot */}
-        <div className="p-8 pb-4 flex items-center justify-start gap-4">
-          <h2 className="text-2xl font-black text-gray-800 tracking-tight">Sales</h2>
+        <div className="p-8 pb-4 flex items-center justify-start gap-4 bg-gradient-to-r from-white to-purple-50/20">
+          <h2 className="text-3xl font-black text-gray-800 tracking-tight font-display">Sales</h2>
           <button
             onClick={handleOpenAdd}
-            className="bg-[#8E54E9] text-white px-5 py-2.5 rounded-lg text-xs font-black flex items-center gap-1.5 hover:bg-[#7c47d3] transition-all active:scale-95 shadow-sm"
+            className="bg-gradient-to-r from-[#8E54E9] to-[#7B47D4] text-white px-6 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 hover:shadow-xl hover:shadow-purple-300/50 transition-all active:scale-95 hover:scale-105"
           >
             <Plus size={14} strokeWidth={4} />
             Add New
