@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Setup - Inventory Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-box.info {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            color: #2c5282;
+        }
+
+        .status-box.success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+
+        .status-box.error {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #742a2a;
+        }
+
+        .status-box.warning {
+            background: #fffaf0;
+            border: 1px solid #fbd38d;
+            color: #7c2d12;
+        }
+
+        .checklist {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .checklist h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .check-item::before {
+            content: "✓";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .details {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #4a5568;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .details pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .table-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .table-item {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .next-steps {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .next-steps h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .next-steps ol {
+            margin-left: 20px;
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Setup</h1>
+        <p class="subtitle">Initialize your Inventory Management System database</p>
+
+        <div id="statusBox" class="status-box"></div>
+
+        <div class="checklist">
+            <h3>Before You Begin</h3>
+            <div class="check-item">XAMPP installed and running</div>
+            <div class="check-item">Apache service started (green in XAMPP)</div>
+            <div class="check-item">MySQL service started (green in XAMPP)</div>
+        </div>
+
+        <button id="setupBtn" onclick="setupDatabase()">
+            Setup Database
+        </button>
+
+        <div id="details"></div>
+    </div>
+
+    <script>
+        function showStatus(type, message) {
+            const statusBox = document.getElementById('statusBox');
+            statusBox.className = `status-box ${type}`;
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = message;
+        }
+
+        async function setupDatabase() {
+            const btn = document.getElementById('setupBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>Setting up database...';
+
+            showStatus('info', 'Creating database and tables... This may take a moment.');
+
+            try {
+                const response = await fetch('/api/setup_database.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('success', `
+                        <strong>Success!</strong> Database setup completed.<br>
+                        <strong>${data.tables_created}</strong> tables created in database <strong>${data.database}</strong>
+                    `);
+
+                    document.getElementById('details').innerHTML = `
+                        <div class="details">
+                            <strong>Database Connection:</strong><br>
+                            Host: ${data.connection.host}:${data.connection.port}<br>
+                            User: ${data.connection.user}<br>
+                            Database: ${data.database}<br><br>
+
+                            <strong>Tables Created (${data.tables_created}):</strong>
+                            <div class="table-list">
+                                ${data.tables.map(table => `<div class="table-item">${table}</div>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="next-steps">
+                            <h3>Next Steps:</h3>
+                            <ol>
+                                <li>Close this page</li>
+                                <li>Go back to your application</li>
+                                <li>Register your first admin account</li>
+                                <li>Start adding inventory items</li>
+                            </ol>
+                        </div>
+                    `;
+
+                    btn.innerHTML = 'Setup Complete ✓';
+                } else {
+                    throw new Error(data.error || 'Setup failed');
+                }
+            } catch (error) {
+                showStatus('error', `
+                    <strong>Error:</strong> ${error.message}<br><br>
+                    <strong>Common Solutions:</strong><br>
+                    • Make sure XAMPP is running<br>
+                    • Check that MySQL port is 3310 (or update api/db.php)<br>
+                    • Verify MySQL credentials in api/db.php<br>
+                    • Check browser console (F12) for detailed errors
+                `);
+
+                btn.innerHTML = 'Try Again';
+                btn.disabled = false;
+
+                console.error('Setup error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
