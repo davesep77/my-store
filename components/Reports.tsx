@@ -104,7 +104,7 @@ export const Reports: React.FC<ReportsProps> = ({ items, transactions, onDeleteT
 
         {/* PDF Print-Only Header */}
         <div className="print-header hidden print:block">
-          <h1 className="text-3xl font-black mb-2">My Store Inventory Report</h1>
+          <h1 className="text-3xl font-black mb-2">Sima Inventory Report</h1>
           <p className="text-gray-500">Generated on: {new Date().toLocaleDateString(settings.locale)}</p>
           {(fromDate || toDate) && (
             <p className="mt-2 font-medium text-gray-400">Filtering period: {fromDate || 'Start'} — {toDate || 'Present'}</p>

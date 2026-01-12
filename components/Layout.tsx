@@ -54,7 +54,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
             <div className="bg-white/15 backdrop-blur-sm p-1.5 rounded-xl shadow-lg border border-white/20">
               <Package className="text-white" size={20} />
             </div>
-            <h1 className="text-xl font-black whitespace-nowrap tracking-tight font-display">My Store</h1>
+            <h1 className="text-xl font-black whitespace-nowrap tracking-tight font-display">Sima Inventory</h1>
           </div>
         )}
         <button
