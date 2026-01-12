@@ -43,7 +43,7 @@ export const SaaSGate: React.FC<SaaSGateProps> = ({ user, onLogout, onStatusUpda
         }
     };
 
-    if (user.account_status === 'pending_payment') {
+    if (user.account_status === 'trial' || user.account_status === 'pending_payment') {
         return (
             <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-6">
                 <div className="max-w-4xl w-full space-y-8 animate-in fade-in zoom-in-95 duration-500">
