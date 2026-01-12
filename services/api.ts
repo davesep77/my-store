@@ -1,8 +1,12 @@
+import { supabaseApi } from './supabase-api';
+
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 import { Item, Transaction, UserSettings, Department, Customer, Vendor, Employee, TimeEntry, Kit, BackOrder, Style, PricingRule, CustomerPrice, Settlement } from '../types';
 
-export const api = {
+export const api = supabaseApi;
+
+export const apiOld = {
     async getItems(): Promise<Item[]> {
         const res = await fetch(`${API_BASE_URL}/items`);
         if (!res.ok) throw new Error('Failed to fetch items');

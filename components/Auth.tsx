@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Package, Mail, Lock, User, Eye, EyeOff, Globe, ArrowRight, CheckCircle2, AlertCircle, Star } from 'lucide-react';
 import { User as UserType } from '../types';
+import { auth } from '../services/auth';
 
 interface AuthProps {
   onLogin: (user: UserType) => void;
@@ -29,29 +30,25 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     setError(null);
 
     try {
-      const endpoint = isLogin ? '/api/login' : '/api/register';
+      let user: UserType;
 
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      let data;
-      const contentType = res.headers.get('content-type');
-
-      if (contentType && contentType.includes('application/json')) {
-        data = await res.json();
+      if (isLogin) {
+        user = await auth.login({
+          username: formData.username,
+          password: formData.password
+        });
       } else {
-        const text = await res.text();
-        throw new Error(`Server returned invalid response. Please check if XAMPP/MySQL is running. Response: ${text.substring(0, 100)}`);
+        user = await auth.register({
+          username: formData.username,
+          password: formData.password,
+          fullName: formData.fullName,
+          email: formData.email,
+          country: formData.country,
+          subscription_plan: formData.subscription_plan
+        });
       }
 
-      if (!res.ok) {
-        throw new Error(data.error || data.message || 'Authentication failed');
-      }
-
-      onLogin(data);
+      onLogin(user);
     } catch (err: any) {
       console.error('Auth error:', err);
       setError(err.message || 'An unexpected error occurred. Please try again.');
