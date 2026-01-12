@@ -8,9 +8,12 @@ export const AdminApprovals: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState<'all' | 'pending_approval' | 'active' | 'rejected'>('pending_approval');
 
     useEffect(() => {
         fetchUsers();
+        const interval = setInterval(fetchUsers, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     const fetchUsers = async () => {
@@ -35,14 +38,38 @@ export const AdminApprovals: React.FC = () => {
         }
     };
 
-    const filteredUsers = users.filter(u =>
-        u.username.toLowerCase().includes(search.toLowerCase()) ||
-        u.email.toLowerCase().includes(search.toLowerCase()) ||
-        u.fullName.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredUsers = users.filter(u => {
+        const matchesSearch = u.username.toLowerCase().includes(search.toLowerCase()) ||
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            u.fullName.toLowerCase().includes(search.toLowerCase());
+
+        const matchesFilter = filter === 'all' || u.account_status === filter;
+
+        return matchesSearch && matchesFilter;
+    });
+
+    const pendingCount = users.filter(u => u.account_status === 'pending_approval').length;
+    const activeCount = users.filter(u => u.account_status === 'active').length;
+    const rejectedCount = users.filter(u => u.account_status === 'rejected').length;
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
+            {pendingCount > 0 && (
+                <div className="bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-2xl p-4 flex items-center gap-3 animate-pulse">
+                    <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-black">
+                        {pendingCount}
+                    </div>
+                    <div>
+                        <p className="font-black text-orange-800">
+                            {pendingCount} {pendingCount === 1 ? 'user is' : 'users are'} awaiting approval
+                        </p>
+                        <p className="text-sm text-orange-600 font-medium">
+                            Review and approve new account registrations
+                        </p>
+                    </div>
+                </div>
+            )}
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-black text-gray-800 flex items-center gap-2">
@@ -62,6 +89,49 @@ export const AdminApprovals: React.FC = () => {
                         className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#8E54E9]/20 outline-none font-medium transition-all"
                     />
                 </div>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-2">
+                <button
+                    onClick={() => setFilter('pending_approval')}
+                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
+                        filter === 'pending_approval'
+                            ? 'bg-orange-500 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-orange-50'
+                    }`}
+                >
+                    Awaiting Approval {pendingCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{pendingCount}</span>}
+                </button>
+                <button
+                    onClick={() => setFilter('all')}
+                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
+                        filter === 'all'
+                            ? 'bg-gray-800 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
+                    }`}
+                >
+                    All Users {users.length > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{users.length}</span>}
+                </button>
+                <button
+                    onClick={() => setFilter('active')}
+                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
+                        filter === 'active'
+                            ? 'bg-green-500 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-green-50'
+                    }`}
+                >
+                    Active {activeCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{activeCount}</span>}
+                </button>
+                <button
+                    onClick={() => setFilter('rejected')}
+                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
+                        filter === 'rejected'
+                            ? 'bg-red-500 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-red-50'
+                    }`}
+                >
+                    Rejected {rejectedCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{rejectedCount}</span>}
+                </button>
             </div>
 
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
