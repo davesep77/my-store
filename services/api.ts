@@ -310,5 +310,13 @@ export const apiOld = {
         });
         if (!res.ok) throw new Error('Failed to update user status');
         return res.json();
+    },
+
+    async getUsers(): Promise<any[]> {
+        const res = await fetch(`${API_BASE_URL}/admin/users`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!res.ok) throw new Error('Failed to fetch users');
+        return res.json();
     }
 };

@@ -16,11 +16,7 @@ export const AdminApprovals: React.FC = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            // We need a get-all-users endpoint.
-            const res = await fetch('/api/admin/users', {
-                headers: { 'Accept': 'application/json' }
-            });
-            const data = await res.json();
+            const data = await api.getUsers();
             setUsers(data);
         } catch (err) {
             console.error(err);

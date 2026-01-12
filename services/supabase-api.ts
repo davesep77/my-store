@@ -1107,5 +1107,27 @@ export const supabaseApi = {
     if (error) throw error;
 
     return { success: true };
+  },
+
+  async getUsers(): Promise<User[]> {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return (data || []).map(u => ({
+      id: u.id,
+      username: u.username,
+      email: u.email,
+      fullName: u.full_name,
+      country: u.country,
+      role: u.role,
+      subscription_plan: u.subscription_plan,
+      payment_status: u.payment_status,
+      account_status: u.account_status,
+      created_at: u.created_at
+    }));
   }
 };
