@@ -37,7 +37,15 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         body: JSON.stringify(formData)
       });
 
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get('content-type');
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(`Server returned invalid response. Please check if XAMPP/MySQL is running. Response: ${text.substring(0, 100)}`);
+      }
 
       if (!res.ok) {
         throw new Error(data.error || data.message || 'Authentication failed');
@@ -45,7 +53,8 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 
       onLogin(data);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Auth error:', err);
+      setError(err.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
