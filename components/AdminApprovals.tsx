@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, UserCheck, UserX, Search, Mail, Globe, Calendar, CreditCard, Star } from 'lucide-react';
+import { ShieldCheck, UserCog, Search, Mail, Globe, Star } from 'lucide-react';
 import { api } from '../services/api';
 import { User } from '../types';
 
@@ -8,7 +8,6 @@ export const AdminApprovals: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [filter, setFilter] = useState<'all' | 'pending_approval' | 'active' | 'rejected'>('pending_approval');
 
     useEffect(() => {
         fetchUsers();
@@ -28,10 +27,34 @@ export const AdminApprovals: React.FC = () => {
         }
     };
 
-    const handleUpdateStatus = async (userId: string, status: string) => {
-        if (!confirm(`Are you sure you want to ${status} this user?`)) return;
+    const handleManageUser = async (userId: string) => {
+        const user = users.find(u => u.id === userId);
+        if (!user) return;
+
+        const actions = [];
+        if (user.account_status !== 'active') {
+            actions.push('approve');
+        }
+        if (user.account_status !== 'rejected') {
+            actions.push('reject');
+        }
+
+        const action = window.prompt(`Choose action for ${user.fullName}:\n${actions.join(' / ')}`);
+        if (!action) return;
+
+        const statusMap: Record<string, string> = {
+            'approve': 'active',
+            'reject': 'rejected'
+        };
+
+        const newStatus = statusMap[action.toLowerCase()];
+        if (!newStatus) {
+            alert('Invalid action');
+            return;
+        }
+
         try {
-            await api.adminUpdateStatus({ userId, status });
+            await api.adminUpdateStatus({ userId, status: newStatus });
             fetchUsers();
         } catch (err) {
             alert('Failed to update status');
@@ -43,115 +66,70 @@ export const AdminApprovals: React.FC = () => {
             u.email.toLowerCase().includes(search.toLowerCase()) ||
             u.fullName.toLowerCase().includes(search.toLowerCase());
 
-        const matchesFilter = filter === 'all' || u.account_status === filter;
-
-        return matchesSearch && matchesFilter;
+        return matchesSearch;
     });
 
-    const pendingCount = users.filter(u => u.account_status === 'pending_approval').length;
-    const activeCount = users.filter(u => u.account_status === 'active').length;
-    const rejectedCount = users.filter(u => u.account_status === 'rejected').length;
+    const getInitials = (name: string) => {
+        const parts = name.split(' ');
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[1][0]).toUpperCase();
+        }
+        return name.substring(0, 2).toUpperCase();
+    };
+
+    const avatarColors = [
+        'bg-purple-100 text-purple-600',
+        'bg-blue-100 text-blue-600',
+        'bg-pink-100 text-pink-600',
+        'bg-indigo-100 text-indigo-600',
+    ];
+
+    const getAvatarColor = (userId: string) => {
+        const index = userId.charCodeAt(0) % avatarColors.length;
+        return avatarColors[index];
+    };
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500">
-            {pendingCount > 0 && (
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-2xl p-4 flex items-center gap-3 animate-pulse">
-                    <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-black">
-                        {pendingCount}
-                    </div>
-                    <div>
-                        <p className="font-black text-orange-800">
-                            {pendingCount} {pendingCount === 1 ? 'user is' : 'users are'} awaiting approval
-                        </p>
-                        <p className="text-sm text-orange-600 font-medium">
-                            Review and approve new account registrations
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
                 <div>
-                    <h2 className="text-2xl font-black text-gray-800 flex items-center gap-2">
-                        <ShieldCheck className="text-[#8E54E9]" />
+                    <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3 mb-2">
+                        <ShieldCheck className="text-gray-700" size={32} />
                         SaaS User Management
                     </h2>
-                    <p className="text-gray-500 text-sm font-medium">Review payments and approve new organization accounts.</p>
+                    <p className="text-gray-500 text-base">Review payments and approve new organization accounts.</p>
                 </div>
 
-                <div className="relative group min-w-[300px]">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#8E54E9] transition-colors" size={18} />
+                <div className="relative min-w-[320px]">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input
                         type="text"
                         placeholder="Search users by name, email..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#8E54E9]/20 outline-none font-medium transition-all"
+                        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-300 outline-none transition-all text-gray-600"
                     />
                 </div>
             </div>
 
-            <div className="flex gap-2 overflow-x-auto pb-2">
-                <button
-                    onClick={() => setFilter('pending_approval')}
-                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
-                        filter === 'pending_approval'
-                            ? 'bg-orange-500 text-white shadow-lg'
-                            : 'bg-white text-gray-600 hover:bg-orange-50'
-                    }`}
-                >
-                    Awaiting Approval {pendingCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{pendingCount}</span>}
-                </button>
-                <button
-                    onClick={() => setFilter('all')}
-                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
-                        filter === 'all'
-                            ? 'bg-gray-800 text-white shadow-lg'
-                            : 'bg-white text-gray-600 hover:bg-gray-50'
-                    }`}
-                >
-                    All Users {users.length > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{users.length}</span>}
-                </button>
-                <button
-                    onClick={() => setFilter('active')}
-                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
-                        filter === 'active'
-                            ? 'bg-green-500 text-white shadow-lg'
-                            : 'bg-white text-gray-600 hover:bg-green-50'
-                    }`}
-                >
-                    Active {activeCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{activeCount}</span>}
-                </button>
-                <button
-                    onClick={() => setFilter('rejected')}
-                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap ${
-                        filter === 'rejected'
-                            ? 'bg-red-500 text-white shadow-lg'
-                            : 'bg-white text-gray-600 hover:bg-red-50'
-                    }`}
-                >
-                    Rejected {rejectedCount > 0 && <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">{rejectedCount}</span>}
-                </button>
-            </div>
-
-            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50/50 border-b border-gray-50">
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">User Details</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Plan & Country</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Payment Status</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Account Status</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Actions</th>
+                            <tr className="border-b border-gray-100">
+                                <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">User Details</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Plan & Country</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Payment Status</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Account Status</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50">
+                        <tbody className="divide-y divide-gray-100">
                             {loading ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-20 text-center">
-                                        <div className="w-10 h-10 border-4 border-[#8E54E9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                                        <p className="font-bold text-gray-400">Loading users...</p>
+                                        <div className="w-10 h-10 border-4 border-gray-300 border-t-gray-600 rounded-full animate-spin mx-auto mb-4" />
+                                        <p className="font-medium text-gray-400">Loading users...</p>
                                     </td>
                                 </tr>
                             ) : filteredUsers.length === 0 ? (
@@ -160,71 +138,64 @@ export const AdminApprovals: React.FC = () => {
                                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                             <Search className="text-gray-300" size={32} />
                                         </div>
-                                        <p className="font-bold text-gray-400">No users found matching your search.</p>
+                                        <p className="font-medium text-gray-400">No users found matching your search.</p>
                                     </td>
                                 </tr>
                             ) : filteredUsers.map(user => (
-                                <tr key={user.id} className="hover:bg-gray-50/50 transition-colors group">
+                                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-5">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-purple-100 text-[#8E54E9] rounded-xl flex items-center justify-center font-black text-xs">
-                                                {user.username.substring(0, 2).toUpperCase()}
+                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm ${getAvatarColor(user.id)}`}>
+                                                {getInitials(user.fullName)}
                                             </div>
                                             <div>
-                                                <p className="font-black text-gray-800 leading-none mb-1">{user.fullName}</p>
-                                                <p className="text-xs font-bold text-gray-400 flex items-center gap-1">
-                                                    <Mail size={12} /> {user.email}
+                                                <p className="font-semibold text-gray-900 mb-1">{user.fullName}</p>
+                                                <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                                                    <Mail size={13} /> {user.email}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-5">
-                                        <div className="space-y-1">
-                                            <p className="text-xs font-black text-gray-700 uppercase flex items-center gap-1">
-                                                <Star size={12} className="text-orange-400" /> {user.subscription_plan || 'Starter'}
+                                        <div className="space-y-1.5">
+                                            <p className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+                                                <Star size={14} className="text-amber-400" /> {(user.subscription_plan || 'starter').toUpperCase()}
                                             </p>
-                                            <p className="text-xs font-bold text-gray-400 flex items-center gap-1">
-                                                <Globe size={12} /> {user.country || 'Unknown'}
+                                            <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                                                <Globe size={13} /> {user.country || 'Unknown'}
                                             </p>
                                         </div>
                                     </td>
                                     <td className="px-6 py-5">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${user.payment_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                                            }`}>
-                                            <CreditCard size={10} className="inline mr-1 mb-0.5" />
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium uppercase tracking-wide ${
+                                            user.payment_status === 'paid'
+                                                ? 'bg-green-50 text-green-700 border border-green-100'
+                                                : 'bg-gray-50 text-gray-600 border border-gray-200'
+                                        }`}>
                                             {user.payment_status || 'unpaid'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-5">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${user.account_status === 'active' ? 'bg-green-100 text-green-600' :
-                                            user.account_status === 'pending_approval' ? 'bg-orange-100 text-orange-600' :
-                                                user.account_status === 'rejected' ? 'bg-red-100 text-red-600' :
-                                                    'bg-gray-100 text-gray-500'
-                                            }`}>
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium uppercase tracking-wide ${
+                                            user.account_status === 'active'
+                                                ? 'bg-green-50 text-green-700 border border-green-100' :
+                                            user.account_status === 'pending_approval'
+                                                ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                                            user.account_status === 'rejected'
+                                                ? 'bg-red-50 text-red-700 border border-red-100' :
+                                                'bg-gray-50 text-gray-600 border border-gray-200'
+                                        }`}>
                                             {user.account_status?.replace('_', ' ')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-5">
-                                        <div className="flex items-center justify-center gap-2">
-                                            {user.account_status !== 'active' && (
-                                                <button
-                                                    onClick={() => handleUpdateStatus(user.id, 'active')}
-                                                    className="p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-600 hover:text-white transition-all shadow-sm"
-                                                    title="Approve User"
-                                                >
-                                                    <UserCheck size={18} />
-                                                </button>
-                                            )}
-                                            {user.account_status !== 'rejected' && (
-                                                <button
-                                                    onClick={() => handleUpdateStatus(user.id, 'rejected')}
-                                                    className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm"
-                                                    title="Reject User"
-                                                >
-                                                    <UserX size={18} />
-                                                </button>
-                                            )}
-                                        </div>
+                                        <button
+                                            onClick={() => handleManageUser(user.id)}
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Manage User"
+                                        >
+                                            <UserCog size={20} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
