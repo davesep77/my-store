@@ -1080,5 +1080,32 @@ export const supabaseApi = {
       .eq('id', id);
 
     if (error) throw error;
+  },
+
+  async submitPayment(data: { userId: string; paymentMethod: string; transactionId: string }): Promise<any> {
+    const { error } = await supabase
+      .from('users')
+      .update({
+        payment_status: 'paid',
+        account_status: 'pending_approval'
+      })
+      .eq('id', data.userId);
+
+    if (error) throw error;
+
+    return { success: true };
+  },
+
+  async adminUpdateStatus(data: { userId: string; status: string }): Promise<any> {
+    const { error } = await supabase
+      .from('users')
+      .update({
+        account_status: data.status
+      })
+      .eq('id', data.userId);
+
+    if (error) throw error;
+
+    return { success: true };
   }
 };
