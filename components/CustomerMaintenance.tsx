@@ -65,7 +65,7 @@ export const CustomerMaintenance: React.FC = () => {
             } else {
                 await api.createCustomer({
                     ...formData,
-                    id: Math.random().toString(36).substr(2, 9),
+                    id: crypto.randomUUID(),
                     dateAdded: new Date().toISOString().split('T')[0]
                 } as Customer);
             }

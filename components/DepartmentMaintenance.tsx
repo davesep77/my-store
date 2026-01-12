@@ -58,7 +58,7 @@ export const DepartmentMaintenance: React.FC<DepartmentMaintenanceProps> = () =>
             if (editingId) {
                 await api.updateDepartment(formData as Department);
             } else {
-                await api.createDepartment({ ...formData, id: Math.random().toString(36).substr(2, 9) } as Department);
+                await api.createDepartment({ ...formData, id: crypto.randomUUID() } as Department);
             }
             setEditingId(null);
             setFormData({});

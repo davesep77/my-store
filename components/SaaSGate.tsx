@@ -27,7 +27,7 @@ export const SaaSGate: React.FC<SaaSGateProps> = ({ user, onLogout, onStatusUpda
             await api.submitPayment({
                 userId: user.id,
                 paymentMethod: 'visa_mock',
-                transactionId: 'txn_' + Math.random().toString(36).substr(2, 9)
+                transactionId: 'txn_' + crypto.randomUUID()
             });
 
             // Update local user state

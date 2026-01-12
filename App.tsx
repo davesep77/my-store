@@ -80,13 +80,14 @@ const App: React.FC = () => {
   }, [user]);
 
   const addItem = async (newItem: Omit<Item, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = crypto.randomUUID();
     try {
       await api.createItem({ ...newItem, id });
       await fetchData();
-    } catch (err) {
-      console.error(err);
-      alert('Failed to add item');
+    } catch (err: any) {
+      console.error('Add item error:', err);
+      alert(err.message || 'Failed to add item');
+      throw err;
     }
   };
 
@@ -114,21 +115,28 @@ const App: React.FC = () => {
   };
 
   const addTransaction = async (t: Omit<Transaction, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = crypto.randomUUID();
     try {
-      await api.createTransaction({ ...t, id });
-
       const item = items.find(i => i.id === t.itemId);
-      if (item) {
-        const stockChange = t.type === 'sale' ? -t.quantity : t.quantity;
-        const updatedItem = { ...item, stock: item.stock + stockChange };
-        await api.updateItem(updatedItem);
+      if (!item) {
+        throw new Error('Item not found');
       }
 
+      if (t.type === 'sale' && item.stock < t.quantity) {
+        throw new Error(`Insufficient stock. Available: ${item.stock}, Requested: ${t.quantity}`);
+      }
+
+      await api.createTransaction({ ...t, id });
+
+      const stockChange = t.type === 'sale' ? -t.quantity : t.quantity;
+      const updatedItem = { ...item, stock: item.stock + stockChange };
+      await api.updateItem(updatedItem);
+
       await fetchData();
-    } catch (err) {
-      console.error(err);
-      alert('Failed to process transaction');
+    } catch (err: any) {
+      console.error('Transaction error:', err);
+      alert(err.message || 'Failed to process transaction');
+      throw err;
     }
   };
 

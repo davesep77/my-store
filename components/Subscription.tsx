@@ -79,7 +79,7 @@ export const Subscription: React.FC<SubscriptionProps> = ({ settings, onUpdate }
         try {
             // Mock data for now, in reality you'd get a token from Stripe
             const newMethod: PaymentMethod = {
-                id: Math.random().toString(36).substr(2, 9),
+                id: crypto.randomUUID(),
                 type: 'card',
                 provider: 'stripe',
                 last4: Math.floor(1000 + Math.random() * 9000).toString(),

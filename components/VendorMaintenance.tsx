@@ -108,7 +108,7 @@ export const VendorMaintenance: React.FC = () => {
                 // Create New
                 const newVendor: Vendor = {
                     ...(formData as Vendor),
-                    id: Math.random().toString(36).substr(2, 9)
+                    id: crypto.randomUUID()
                 };
                 await api.createVendor(newVendor);
                 savedId = newVendor.id;
