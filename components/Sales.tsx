@@ -81,35 +81,45 @@ export const Sales: React.FC<SalesProps> = ({ items, transactions, onAddTransact
     setDeleteBatchId(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If editing, we delete the old batch first to revert stock correctly, then re-add
-    if (view === 'edit' && editingBatchId) {
-      const oldBatch = salesBatches.find(b => b.id === editingBatchId);
-      if (oldBatch) {
-        oldBatch.items.forEach((t: Transaction) => onDeleteTransaction(t.id));
+    try {
+      // If editing, we delete the old batch first to revert stock correctly, then re-add
+      if (view === 'edit' && editingBatchId) {
+        const oldBatch = salesBatches.find(b => b.id === editingBatchId);
+        if (oldBatch) {
+          for (const t of oldBatch.items) {
+            await onDeleteTransaction(t.id);
+          }
+        }
       }
+
+      const batchId = `sale-${Date.now()}`;
+
+      // Process all transactions sequentially to ensure proper stock updates
+      for (const entry of entries) {
+        if (entry.itemId && entry.quantity > 0) {
+          await onAddTransaction({
+            batchId,
+            date,
+            type: 'sale',
+            itemId: entry.itemId,
+            quantity: entry.quantity,
+            unitPrice: entry.price,
+            remarks: 'Standard Sale'
+          });
+        }
+      }
+
+      // Only reset form and close if all transactions succeeded
+      setEntries([{ itemId: '', quantity: 1, price: 0 }]);
+      setView('list');
+      setEditingBatchId(null);
+    } catch (err: any) {
+      console.error('Failed to save sale:', err);
+      // Error already shown by addTransaction, form stays open for user to fix
     }
-
-    const batchId = `sale-${Date.now()}`;
-    entries.forEach(entry => {
-      if (entry.itemId && entry.quantity > 0) {
-        onAddTransaction({
-          batchId,
-          date,
-          type: 'sale',
-          itemId: entry.itemId,
-          quantity: entry.quantity,
-          unitPrice: entry.price,
-          remarks: 'Standard Sale'
-        });
-      }
-    });
-
-    setEntries([{ itemId: '', quantity: 1, price: 0 }]);
-    setView('list');
-    setEditingBatchId(null);
   };
 
   const handleOpenAdd = () => {
