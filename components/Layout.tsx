@@ -13,7 +13,8 @@ import {
   Menu,
   X,
   LogOut,
-  LayoutGrid
+  LayoutGrid,
+  ShieldCheck
 } from 'lucide-react';
 import { Tab, User } from '../types';
 
@@ -42,6 +43,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
     { id: 'sales', label: 'Sales', icon: <TrendingUp size={20} /> },
     { id: 'purchase', label: 'Purchase', icon: <ShoppingCart size={20} /> },
     { id: 'report', label: 'Report', icon: <FileText size={20} /> },
+    ...(user.role === 'admin' ? [{ id: 'admin-approvals', label: 'Admin Approvals', icon: <ShieldCheck size={20} /> }] : []),
   ];
 
   const SidebarContent = () => (

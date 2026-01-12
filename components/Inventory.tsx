@@ -17,6 +17,10 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
   const handleEdit = (item: Item) => {
     setEditingItem(item);
     setIsModalOpen(true);
@@ -36,6 +40,10 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
     const matchesFilter = filterMode === 'all' || item.stock <= (item.stockAlertLevel || 5);
     return matchesSearch && matchesFilter;
   });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const fmt = (val: number) => {
     return new Intl.NumberFormat(settings.locale, {
@@ -141,11 +149,11 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
               <th className="px-6 py-4">Opening</th>
               <th className="px-6 py-4">P. Value</th>
               <th className="px-6 py-4">C. Value</th>
-              <th className="px-6 py-4 text-center">Actions</th>
+              <th className="px-6 py-4 text-center sticky right-0 bg-gray-50/95 backdrop-blur-sm z-10 w-[120px] shadow-[-4px_0_8px_-4px_rgba(0,0,0,0.1)]">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {filteredItems.map(item => {
+            {currentItems.map(item => {
               const m = itemMetrics[item.id];
               const isLow = item.stock <= (item.stockAlertLevel || 5);
               return (
@@ -167,7 +175,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
                   <td className="px-6 py-4 text-gray-500">{m?.openingStock || 0}</td>
                   <td className="px-6 py-4 text-gray-500 font-medium">{fmt(m?.purchaseValue || 0)}</td>
                   <td className="px-6 py-4 text-gray-500 font-medium">{fmt(m?.consumptionValue || 0)}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 sticky right-0 bg-white/95 backdrop-blur-sm z-10 shadow-[-4px_0_8px_-4px_rgba(0,0,0,0.1)] group-hover:bg-gray-50/95">
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => onDelete(item.id)}
@@ -188,6 +196,42 @@ export const Inventory: React.FC<InventoryProps> = ({ items, transactions, setti
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+        <div className="text-xs text-gray-500 font-bold">
+          Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredItems.length)} of {filteredItems.length} Products
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg hover:bg-white disabled:opacity-50 disabled:hover:bg-transparent transition-all"
+          >
+            <ChevronDown className="rotate-90" size={16} />
+          </button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === i + 1
+                  ? 'bg-[#8E54E9] text-white shadow-md shadow-purple-200'
+                  : 'text-gray-500 hover:bg-white'
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredItems.length / itemsPerPage)))}
+            disabled={currentPage === Math.ceil(filteredItems.length / itemsPerPage)}
+            className="p-2 rounded-lg hover:bg-white disabled:opacity-50 disabled:hover:bg-transparent transition-all"
+          >
+            <ChevronDown className="-rotate-90" size={16} />
+          </button>
+        </div>
       </div>
 
       <style>{`

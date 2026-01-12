@@ -19,7 +19,10 @@ switch ($method) {
                  "invoiceFooter" => "",
                  "nextInvoiceNumber" => 1000,
                  "invoiceTerms" => "",
-                 "taxRate" => 0.00
+                 "taxRate" => 0.00,
+                 "subscriptionPlan" => "starter",
+                 "billingCycle" => "monthly",
+                 "subscriptionStatus" => "inactive" // Default to inactive for new users
              ]);
         } else {
              // Cast numbers
@@ -36,7 +39,7 @@ switch ($method) {
         $check = $pdo->query("SELECT id FROM settings LIMIT 1")->fetch();
 
         if ($check) {
-            $sql = "UPDATE settings SET currency=?, locale=?, dateFormat=?, email=?, invoiceHeader=?, invoiceFooter=?, nextInvoiceNumber=?, invoiceTerms=?, taxRate=? WHERE id=?";
+            $sql = "UPDATE settings SET currency=?, locale=?, dateFormat=?, email=?, invoiceHeader=?, invoiceFooter=?, nextInvoiceNumber=?, invoiceTerms=?, taxRate=?, subscriptionPlan=?, billingCycle=?, subscriptionStatus=? WHERE id=?";
             $stmt = $pdo->prepare($sql);
             try {
                 $stmt->execute([
@@ -49,6 +52,9 @@ switch ($method) {
                     $data['nextInvoiceNumber'] ?? 1000,
                     $data['invoiceTerms'] ?? '',
                     $data['taxRate'] ?? 0.00,
+                    $data['subscriptionPlan'] ?? 'starter',
+                    $data['billingCycle'] ?? 'monthly',
+                    $data['subscriptionStatus'] ?? 'active', // If updating, usually means they are active or keeping status. Let's assume active if not specified, or trust frontend.
                     $check['id']
                 ]);
                 echo json_encode(["message" => "Settings updated"]);
@@ -57,7 +63,7 @@ switch ($method) {
                 echo json_encode(["error" => $e->getMessage()]);
             }
         } else {
-            $sql = "INSERT INTO settings (currency, locale, dateFormat, email, invoiceHeader, invoiceFooter, nextInvoiceNumber, invoiceTerms, taxRate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO settings (currency, locale, dateFormat, email, invoiceHeader, invoiceFooter, nextInvoiceNumber, invoiceTerms, taxRate, subscriptionPlan, billingCycle, subscriptionStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             try {
                 $stmt->execute([
@@ -69,7 +75,10 @@ switch ($method) {
                     $data['invoiceFooter'] ?? '',
                     $data['nextInvoiceNumber'] ?? 1000,
                     $data['invoiceTerms'] ?? '',
-                    $data['taxRate'] ?? 0.00
+                    $data['taxRate'] ?? 0.00,
+                    $data['subscriptionPlan'] ?? 'starter',
+                    $data['billingCycle'] ?? 'monthly',
+                    $data['subscriptionStatus'] ?? 'inactive' // Default to inactive for new inserts
                 ]);
                 echo json_encode(["message" => "Settings created"]);
             } catch (PDOException $e) {

@@ -27,19 +27,24 @@ try {
         exit();
     }
 
-    $sql = "INSERT INTO users (id, username, password, fullName, email, role) VALUES (?, ?, ?, ?, ?, ?)";
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $status = 'active'; // Allow login so they can hit the subscription wall
+    $country = $data['country'] ?? null;
+
+    $sql = "INSERT INTO users (id, username, password, fullName, email, role, status, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$id, $username, $password, $fullName, $email, $role]);
+    $stmt->execute([$id, $username, $passwordHash, $fullName, $email, $role, $status, $country]);
 
     echo json_encode([
         "id" => $id,
         "username" => $username,
         "fullName" => $fullName,
         "email" => $email,
-        "role" => $role
+        "role" => $role,
+        "status" => $status
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    echo json_encode(["error" => "Database error"]);
 }
 ?>

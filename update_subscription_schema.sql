@@ -1,0 +1,8 @@
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS subscriptionPlan VARCHAR(20) DEFAULT 'starter';
+
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS billingCycle VARCHAR(20) DEFAULT 'monthly';
+
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS subscriptionStatus VARCHAR(20) DEFAULT 'active';

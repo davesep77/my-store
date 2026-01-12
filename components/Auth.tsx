@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Package, Mail, Lock, User, Eye, EyeOff, Globe, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Package, Mail, Lock, User, Eye, EyeOff, Globe, ArrowRight, CheckCircle2, AlertCircle, Star } from 'lucide-react';
 import { User as UserType } from '../types';
 
 interface AuthProps {
@@ -18,7 +18,9 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     username: '',
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
+    country: '',
+    subscription_plan: 'starter'
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +29,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     setError(null);
 
     try {
-      const endpoint = isLogin ? 'http://localhost/my-store-inventory-manager%20(1)/api/login.php' : 'http://localhost/my-store-inventory-manager%20(1)/api/register.php';
+      const endpoint = isLogin ? '/api/login' : '/api/register';
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -38,7 +40,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        throw new Error(data.error || data.message || 'Authentication failed');
       }
 
       onLogin(data);
@@ -204,18 +206,66 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
             </div>
 
             {!isLogin && (
-              <div className="animate-in slide-in-from-top-2">
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">{t.emailLabel}</label>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#8E54E9] transition-colors" size={18} />
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-200 focus:bg-white transition-all outline-none font-bold text-gray-700"
-                    placeholder="admin@mystore.com"
-                  />
+              <div className="space-y-6 animate-in slide-in-from-top-2">
+                <div className="animate-in slide-in-from-top-2">
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">{t.emailLabel}</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#8E54E9] transition-colors" size={18} />
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-200 focus:bg-white transition-all outline-none font-bold text-gray-700"
+                      placeholder="admin@mystore.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="animate-in slide-in-from-top-2">
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Country</label>
+                  <div className="relative group">
+                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#8E54E9] transition-colors" size={18} />
+                    <select
+                      required={!isLogin}
+                      value={formData.country}
+                      onChange={e => setFormData({ ...formData, country: e.target.value })}
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-200 focus:bg-white transition-all outline-none font-bold text-gray-700 appearance-none"
+                    >
+                      <option value="" disabled>Select Country</option>
+                      <option value="US">United States</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="CA">Canada</option>
+                      <option value="AU">Australia</option>
+                      <option value="DE">Germany</option>
+                      <option value="FR">France</option>
+                      <option value="ES">Spain</option>
+                      <option value="IT">Italy</option>
+                      <option value="JP">Japan</option>
+                      <option value="BR">Brazil</option>
+                      <option value="IN">India</option>
+                      <option value="MX">Mexico</option>
+                      <option value="ZA">South Africa</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="animate-in slide-in-from-top-2">
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Subscription Plan</label>
+                  <div className="relative group">
+                    <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#8E54E9] transition-colors" size={18} />
+                    <select
+                      required={!isLogin}
+                      value={formData.subscription_plan}
+                      onChange={e => setFormData({ ...formData, subscription_plan: e.target.value })}
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-purple-200 focus:bg-white transition-all outline-none font-bold text-gray-700 appearance-none"
+                    >
+                      <option value="starter">Starter Plan ($10/mo)</option>
+                      <option value="pro">Pro Plan ($25/mo)</option>
+                      <option value="enterprise">Enterprise Plan ($50/mo)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             )}

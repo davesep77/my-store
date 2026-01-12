@@ -1,5 +1,5 @@
 
-export type Tab = 'dashboard' | 'management' | 'items' | 'new-stocks' | 'sales' | 'purchase' | 'report' | 'settings' | 'departments' | 'customers' | 'vendors' | 'invoice-properties' | 'employees' | 'time-clock' | 'kits' | 'back-orders' | 'styles' | 'pricing' | 'customer-prices' | 'settlements' | 'global-pricing';
+export type Tab = 'dashboard' | 'management' | 'items' | 'new-stocks' | 'sales' | 'purchase' | 'report' | 'settings' | 'departments' | 'customers' | 'vendors' | 'invoice-properties' | 'employees' | 'time-clock' | 'kits' | 'back-orders' | 'styles' | 'pricing' | 'customer-prices' | 'settlements' | 'global-pricing' | 'admin-approvals';
 
 export interface User {
   id: string;
@@ -7,6 +7,11 @@ export interface User {
   fullName: string;
   email: string;
   role: 'admin' | 'manager' | 'viewer';
+  status: string;
+  country?: string;
+  account_status?: 'pending_payment' | 'pending_approval' | 'active' | 'rejected' | 'suspended';
+  payment_status?: 'unpaid' | 'paid';
+  subscription_plan?: string;
 }
 
 export interface Item {
@@ -42,6 +47,20 @@ export interface UserSettings {
   nextInvoiceNumber?: number;
   invoiceTerms?: string;
   taxRate?: number;
+  subscriptionPlan?: 'starter' | 'pro' | 'enterprise';
+  billingCycle?: 'monthly' | 'yearly';
+  subscriptionStatus?: 'active' | 'inactive' | 'cancelled';
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'card' | 'paypal';
+  provider: 'stripe' | 'paypal';
+  last4?: string;
+  expiry_month?: number;
+  expiry_year?: number;
+  brand?: string; // visa, mastercard, etc.
+  is_default: boolean;
 }
 
 

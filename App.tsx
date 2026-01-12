@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Subscription } from './components/Subscription';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { Inventory } from './components/Inventory';
@@ -23,6 +24,8 @@ import { SettlementManager } from './components/SettlementManager';
 import GlobalPricingManager from './components/GlobalPricingManager';
 import { InvoiceProperties } from './components/InvoiceProperties';
 import { Auth } from './components/Auth';
+import { SaaSGate } from './components/SaaSGate';
+import { AdminApprovals } from './components/AdminApprovals';
 import { Tab, Item, Transaction, UserSettings, User } from './types';
 import { api } from './services/api';
 
@@ -156,9 +159,9 @@ const App: React.FC = () => {
     try {
       await api.updateSettings(newSettings);
       setSettings(newSettings);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to update settings');
+      alert(err.message || 'Failed to update settings');
     }
   };
 
@@ -166,15 +169,31 @@ const App: React.FC = () => {
     setUser(null);
     setActiveTab('dashboard');
   };
-
   if (!user) {
     return <Auth onLogin={setUser} />;
   }
 
-  // Simplified loading/error handling to not block UI completely if we have cached data or similar, 
-  // but here we block initial load.
-  if (loading && items.length === 0 && transactions.length === 0) {
-    // return <div className="flex items-center justify-center h-screen">Loading inventory data...</div>;
+  // SaaS Gate: Block non-admin users if account is not active
+  if (user.role !== 'admin' && user.account_status !== 'active') {
+    return (
+      <SaaSGate
+        user={user}
+        onLogout={handleLogout}
+        onStatusUpdate={(updatedUser) => {
+          localStorage.setItem('inventory_session', JSON.stringify(updatedUser));
+          setUser(updatedUser);
+        }}
+      />
+    );
+  }
+
+  // Show loading state to prevent flashes
+  if (loading && !items.length && !transactions.length) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8E54E9]"></div>
+      </div>
+    );
   }
 
   if (error && items.length === 0) {
@@ -232,6 +251,8 @@ const App: React.FC = () => {
         return <Settings settings={settings} onUpdate={updateSettings} />;
       case 'invoice-properties':
         return <InvoiceProperties onNavigate={setActiveTab} />;
+      case 'admin-approvals':
+        return <AdminApprovals />;
       default:
         return <Dashboard items={items} transactions={transactions} settings={settings} />;
     }
